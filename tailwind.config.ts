@@ -47,16 +47,28 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
+        student: {
+          DEFAULT: "hsl(var(--student-primary))",
+          secondary: "hsl(var(--student-secondary))",
+          accent: "hsl(var(--student-accent))",
+          light: "hsl(var(--student-light))",
         },
+        recruiter: {
+          DEFAULT: "hsl(var(--recruiter-primary))",
+          secondary: "hsl(var(--recruiter-secondary))",
+          accent: "hsl(var(--recruiter-accent))",
+          light: "hsl(var(--recruiter-light))",
+        },
+        placement: {
+          DEFAULT: "hsl(var(--placement-primary))",
+          secondary: "hsl(var(--placement-secondary))",
+          accent: "hsl(var(--placement-accent))",
+          light: "hsl(var(--placement-light))",
+        },
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Space Grotesk', 'Inter', 'sans-serif'],
       },
       borderRadius: {
         lg: "var(--radius)",
