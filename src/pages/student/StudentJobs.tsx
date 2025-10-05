@@ -6,9 +6,12 @@ import { Search, Filter } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import JobCard from "@/components/JobCard";
 import { useToast } from "@/hooks/use-toast";
+import { applicationStore } from "@/store/applicationStore";
+import { useNavigate } from "react-router-dom";
 
 const StudentJobs = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
 
   const jobs = [
@@ -69,15 +72,31 @@ const StudentJobs = () => {
   ];
 
   const handleApply = (jobId: number) => {
+    const job = jobs.find(j => j.id === jobId);
+    if (!job) return;
+
+    // Add application to store
+    applicationStore.add({
+      studentName: "Current Student", // In real app, get from auth context
+      jobId: job.id,
+      jobTitle: job.title,
+      company: job.company,
+      atsScore: Math.floor(Math.random() * 20) + 75, // Mock ATS score
+    });
+
     toast({
       title: "Application submitted!",
       description: "Your application has been sent to the recruiter",
     });
   };
 
+  const handleLogout = () => {
+    navigate("/");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-student-light/30 to-background">
-      <Navbar userRole="student" />
+      <Navbar userRole="student" onLogout={handleLogout} />
       
       <div className="container mx-auto px-6 pt-24 pb-12">
         <div className="mb-8 fade-in">

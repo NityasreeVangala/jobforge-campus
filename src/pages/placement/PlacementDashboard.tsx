@@ -1,15 +1,32 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Users, Briefcase, TrendingUp, Award, Building2 } from "lucide-react";
+import { Users, Briefcase, TrendingUp, Award, Building2, PieChart } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import { useNavigate } from "react-router-dom";
+import { applicationStore } from "@/store/applicationStore";
+import { useState, useEffect } from "react";
 
 const PlacementDashboard = () => {
+  const navigate = useNavigate();
+  const [applications, setApplications] = useState(applicationStore.getAll());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setApplications(applicationStore.getAll());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   const campusStats = [
     { label: "Total Students", value: "1,245", icon: Users, color: "from-placement to-placement-secondary" },
     { label: "Active Recruiters", value: "89", icon: Building2, color: "from-placement-secondary to-placement-accent" },
     { label: "Job Postings", value: "156", icon: Briefcase, color: "from-placement-accent to-placement-secondary" },
-    { label: "Placements", value: "523", icon: Award, color: "from-placement to-placement-accent" },
+    { label: "Placements", value: applications.length.toString(), icon: Award, color: "from-placement to-placement-accent" },
   ];
+
+  const handleLogout = () => {
+    navigate("/");
+  };
 
   const recentActivity = [
     { type: "placement", company: "Tech Corp", student: "John Doe", package: "12 LPA" },
@@ -19,7 +36,7 @@ const PlacementDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-placement-light/30 to-background">
-      <Navbar userRole="placement" />
+      <Navbar userRole="placement" onLogout={handleLogout} />
       
       <div className="container mx-auto px-6 pt-24 pb-12">
         <div className="mb-8 fade-in">
@@ -90,6 +107,39 @@ const PlacementDashboard = () => {
                       </Badge>
                     </div>
                   ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-semibold mb-4">Application Distribution</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Tech Corp</span>
+                    <div className="flex items-center gap-2">
+                      <div className="w-32 h-2 bg-placement-light/30 rounded-full overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-placement to-placement-accent" style={{ width: '75%' }} />
+                      </div>
+                      <span className="text-sm font-medium">{Math.floor(applications.length * 0.3)}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">StartupXYZ</span>
+                    <div className="flex items-center gap-2">
+                      <div className="w-32 h-2 bg-placement-light/30 rounded-full overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-placement to-placement-accent" style={{ width: '60%' }} />
+                      </div>
+                      <span className="text-sm font-medium">{Math.floor(applications.length * 0.25)}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Digital Solutions</span>
+                    <div className="flex items-center gap-2">
+                      <div className="w-32 h-2 bg-placement-light/30 rounded-full overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-placement to-placement-accent" style={{ width: '45%' }} />
+                      </div>
+                      <span className="text-sm font-medium">{Math.floor(applications.length * 0.2)}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

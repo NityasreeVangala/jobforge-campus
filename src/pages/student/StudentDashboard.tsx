@@ -5,12 +5,18 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Upload, TrendingUp, Briefcase, CheckCircle, AlertCircle } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
 const StudentDashboard = () => {
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [atsScore, setAtsScore] = useState<number | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
+
+  const handleLogout = () => {
+    navigate("/");
+  };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -38,7 +44,7 @@ const StudentDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-student-light/30 to-background">
-      <Navbar userRole="student" />
+      <Navbar userRole="student" onLogout={handleLogout} />
       
       <div className="container mx-auto px-6 pt-24 pb-12">
         <div className="mb-8 fade-in">

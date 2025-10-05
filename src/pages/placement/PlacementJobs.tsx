@@ -4,12 +4,18 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Download } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import { useNavigate } from "react-router-dom";
 import JobCard from "@/components/JobCard";
 import { useToast } from "@/hooks/use-toast";
 
 const PlacementJobs = () => {
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
+
+  const handleLogout = () => {
+    navigate("/");
+  };
 
   const jobs = [
     {
@@ -83,7 +89,7 @@ const PlacementJobs = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-placement-light/30 to-background">
-      <Navbar userRole="placement" />
+      <Navbar userRole="placement" onLogout={handleLogout} />
       
       <div className="container mx-auto px-6 pt-24 pb-12">
         <div className="flex items-center justify-between mb-8 fade-in">

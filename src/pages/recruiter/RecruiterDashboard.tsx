@@ -1,25 +1,38 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Users, Briefcase, TrendingUp, Plus } from "lucide-react";
+import { Users, Briefcase, TrendingUp, Plus, BarChart3 } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import { useNavigate } from "react-router-dom";
+import { applicationStore } from "@/store/applicationStore";
+import { useState, useEffect } from "react";
 
 const RecruiterDashboard = () => {
+  const navigate = useNavigate();
+  const [applications, setApplications] = useState(applicationStore.getAll());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setApplications(applicationStore.getAll());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   const postedJobs = [
-    { id: 1, title: "Senior Developer", applications: 45, status: "active" },
-    { id: 2, title: "Product Manager", applications: 32, status: "active" },
-    { id: 3, title: "UX Designer", applications: 28, status: "closed" },
+    { id: 1, title: "Software Engineer", applications: applicationStore.getByJob(1).length, status: "active" as const },
+    { id: 2, title: "Frontend Developer", applications: applicationStore.getByJob(2).length, status: "active" as const },
+    { id: 3, title: "Data Analyst", applications: applicationStore.getByJob(3).length, status: "active" as const },
   ];
 
-  const recentApplicants = [
-    { id: 1, name: "Alice Johnson", position: "Senior Developer", atsScore: 92 },
-    { id: 2, name: "Bob Smith", position: "Product Manager", atsScore: 88 },
-    { id: 3, name: "Carol Williams", position: "Senior Developer", atsScore: 85 },
-  ];
+  const recentApplicants = applications.slice(-5).reverse();
+
+  const handleLogout = () => {
+    navigate("/");
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-recruiter-light/30 to-background">
-      <Navbar userRole="recruiter" />
+      <Navbar userRole="recruiter" onLogout={handleLogout} />
       
       <div className="container mx-auto px-6 pt-24 pb-12">
         <div className="flex items-center justify-between mb-8 fade-in">
@@ -45,7 +58,7 @@ const RecruiterDashboard = () => {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Active Jobs</p>
-                <p className="text-2xl font-bold">8</p>
+                <p className="text-2xl font-bold">{postedJobs.length}</p>
               </div>
             </div>
           </Card>
@@ -57,7 +70,7 @@ const RecruiterDashboard = () => {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Total Applications</p>
-                <p className="text-2xl font-bold">156</p>
+                <p className="text-2xl font-bold">{applications.length}</p>
               </div>
             </div>
           </Card>
@@ -68,8 +81,12 @@ const RecruiterDashboard = () => {
                 <TrendingUp className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Shortlisted</p>
-                <p className="text-2xl font-bold">23</p>
+                <p className="text-sm text-muted-foreground">Avg ATS Score</p>
+                <p className="text-2xl font-bold">
+                  {applications.length > 0
+                    ? Math.round(applications.reduce((acc, app) => acc + app.atsScore, 0) / applications.length)
+                    : 0}%
+                </p>
               </div>
             </div>
           </Card>
@@ -120,8 +137,8 @@ const RecruiterDashboard = () => {
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div>
-                      <h3 className="font-semibold">{applicant.name}</h3>
-                      <p className="text-sm text-muted-foreground">{applicant.position}</p>
+                      <h3 className="font-semibold">{applicant.studentName}</h3>
+                      <p className="text-sm text-muted-foreground">{applicant.jobTitle}</p>
                     </div>
                     <Badge className="gradient-recruiter">
                       ATS: {applicant.atsScore}%
